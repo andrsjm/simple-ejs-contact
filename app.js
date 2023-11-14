@@ -1,6 +1,8 @@
 const express = require('express');
 const { readFile, writeFile } = require('./readFile');
 const bodyParser = require('body-parser');
+const { parseContact, parsePathName, parseOldName, parseName } = require('./parser');
+const { deleteContact, getData, updateData } = require('./repository');
 
 const app = express()
 
@@ -10,7 +12,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.get('/', (req, res) => {
     const data = readFile()
 
-    res.render('pages/index', {listOfContacts : data})
+    res.render('pages/index', {listOfContacts : data, massage: null})
 })
 
 app.get('/contact', (req, res) => {
@@ -20,34 +22,23 @@ app.get('/contact', (req, res) => {
 app.post('/contact', (req, res) => {
     const data = readFile()
     
-    const { name, email, phone, address } = req.body;
-
-    const newContact = {
-        name,
-        email,
-        phone,
-        address,
-    };
+    const newContact = parseContact(req)
 
     data.push(newContact)
 
     writeFile(data)
 
-    res.render('pages/index', {listOfContacts : data})
+    res.redirect('/')
 })
 
 app.post('/delete-contact', (req, res) => {
     const data = readFile()
     
-    const { contactName } = req.body;
+    const contact = parseContact(req)
 
-    for (let i = 0; i < data.length; i++) {
-        if(data[i]['name'] === contactName){
-            data.splice(i, 1)
-        }
-    }
+    const newData = deleteContact(data, contact.name)
 
-    writeFile(data)
+    writeFile(newData)
 
     res.redirect('/')
 })
@@ -55,16 +46,9 @@ app.post('/delete-contact', (req, res) => {
 app.get('/edit-contact/:name', (req, res) => {
     const data = readFile()
     
-    const name = req.params.name
+    const name = parsePathName(req)
     
-    let tempData
-
-    for (let i = 0; i < data.length; i++) {
-        if(data[i]['name'] === name){
-            tempData = data[i]
-            break;
-        }
-    }
+    let tempData = getData(data, name)
 
     tempData['oldName'] = name
 
@@ -74,23 +58,13 @@ app.get('/edit-contact/:name', (req, res) => {
 app.post('/edit-contact', (req, res) => {
     const data = readFile()
 
-    const { oldName, name, email, phone, address } = req.body;
+    const newContact = parseContact(req)
 
-    const newContact = {
-        name,
-        email,
-        phone,
-        address,
-    };
+    const oldName = parseOldName(req)
 
-    for (let i = 0; i < data.length; i++) {
-        if(data[i]['name'] === oldName){
-            data[i] = newContact;
-            break;
-        }
-    }  
+    const newData = updateData(data, newContact, oldName)
 
-    writeFile(data)
+    writeFile(newData)
 
     res.redirect('/') 
 })
