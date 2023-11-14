@@ -1,0 +1,22 @@
+<%- include('../components/header') %>
+<%- include('../components/nav') %>
+
+<main style="max-width: 600px; margin: 20px auto;">
+    <h2 style="margin-bottom: 20px;"><%= title %></h2>
+    <form method="post" action="<%= action %>" style="background-color: #333; color: #fff; padding: 15px; border-radius: 8px;">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" value="<%= contact?.name || '' %>" style="width: 100%; padding: 8px; margin-bottom: 10px;">
+        <% if (contact && contact.oldName !== undefined) { %>
+            <input type="hidden" id="oldName" name="oldName" value="<%= contact.oldName %>">
+        <% } %>
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" value="<%= contact?.email || '' %>" style="width: 100%; padding: 8px; margin-bottom: 10px;">
+        <label for="phone">Phone:</label>
+        <input type="tel" id="phone" name="phone" value="<%= contact?.phone || '' %>" style="width: 100%; padding: 8px; margin-bottom: 10px;">
+        <label for="address">Address:</label>
+        <textarea id="address" name="address" style="width: 100%; padding: 8px; margin-bottom: 10px;"><%= contact?.address || '' %></textarea>
+        <button type="submit" style="background-color: #4caf50; color: #fff; padding: 10px; border: none; cursor: pointer;">Save</button>
+    </form>
+</main>
+
+<%- include('../components/footer') %>

@@ -1,0 +1,23 @@
+<%- include('../components/header') %>
+<%- include('../components/nav') %>
+
+<main style="max-width: 800px; margin: 20px auto;">
+    <h2>Contact List</h2>
+    <div style="display: flex; flex-wrap: wrap; gap: 20px;">
+        <% listOfContacts.forEach(contact => { %>
+            <div style="background-color: #333; color: #fff; padding: 15px; border-radius: 8px; flex: 1; max-width: 300px;">
+                <h3><%= contact.name %></h3>
+                <p>Email: <%= contact.email %></p>
+                <p>Phone: <%= contact.phone %></p>
+                <p>Address: <%= contact.address %></p>
+                <form method="post" action="/delete-contact">
+                    <input type="hidden" name="contactName" value="<%= contact.name %>">
+                    <button type="submit" style="background-color: #ff3333; color: #fff; padding: 5px; border: none; cursor: pointer;">Delete</button>
+                </form>
+                <a  href="/edit-contact/<%= contact.name %>" style="color: #fff; text-decoration: none; margin-right: 10px;">Edit</a>
+            </div>
+        <% }) %>
+    </div>
+</main>
+
+<%- include('../components/footer') %>
