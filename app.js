@@ -12,7 +12,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.get('/', (req, res) => {
     const data = readFile()
 
-    res.render('pages/index', {listOfContacts : data, massage: null})
+    res.render('pages/index', {listOfContacts : data, message: null})
 })
 
 app.get('/contact', (req, res) => {
@@ -28,7 +28,8 @@ app.post('/contact', (req, res) => {
 
     writeFile(data)
 
-    res.redirect('/')
+    const successMessage = 'Contact added successfully!';
+    res.render('pages/index', { listOfContacts: data, message: successMessage });
 })
 
 app.post('/delete-contact', (req, res) => {
@@ -40,7 +41,8 @@ app.post('/delete-contact', (req, res) => {
 
     writeFile(newData)
 
-    res.redirect('/')
+    const successMessage = 'Contact deleted successfully!';
+    res.render('pages/index', { listOfContacts: data, message: successMessage });
 })
 
 app.get('/edit-contact/:name', (req, res) => {
@@ -66,9 +68,9 @@ app.post('/edit-contact', (req, res) => {
 
     writeFile(newData)
 
-    res.redirect('/') 
+    const successMessage = 'Contact edited successfully!';
+    res.render('pages/index', { listOfContacts: data, message: successMessage });
 })
-
 
 app.listen(3000, () => {
     console.log("Running on Port 3000")
